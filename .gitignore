@@ -205,3 +205,21 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# API Keys and Sensitive Configuration
+config/config.yaml
+config/config.yaml.backup
+.env
+.env.local
+.env.production
+.env.staging
+*.key
+*.pem
+secrets/
+
+# Project-specific files
+logs/
+data/cache/
+models/*.pkl
+models/*.joblib
+outputs/
