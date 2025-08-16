@@ -341,11 +341,11 @@ def main():
     dataset = pipeline.create_training_dataset(limit=500, use_cache=True)
     
     if dataset:
-        logger.info("Data pipeline completed successfully!")
-        logger.info(f"Dataset contains {dataset['metadata']['total_samples']} samples")
-        logger.info(f"Features: {dataset['metadata']['n_features']}")
+        print("Data pipeline completed successfully!")
+        print(f"Dataset contains {dataset['metadata']['total_samples']} samples")
+        print(f"Features: {dataset['metadata']['n_features']}")
     else:
-        logger.error("Data pipeline failed!")
+        print("Data pipeline failed!")
 
 if __name__ == "__main__":
     main()

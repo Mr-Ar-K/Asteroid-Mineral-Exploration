@@ -74,7 +74,7 @@ def main():
             
         elif args.command == 'predict':
             print(f"🔍 Analyzing asteroid: {args.asteroid_id}")
-            cmd = [sys.executable, str(project_root / 'src' / 'models' / 'predict.py'), args.asteroid_id]
+            cmd = [sys.executable, str(project_root / 'scripts' / 'predict_cli.py'), args.asteroid_id]
             if args.output:
                 cmd.extend(['--output', args.output])
             subprocess.run(cmd, cwd=project_root)
@@ -88,7 +88,7 @@ def main():
             
         elif args.command == 'demo':
             print("🎯 Running system demonstration...")
-            subprocess.run([sys.executable, 'setup.py'], cwd=project_root)
+            subprocess.run([sys.executable, str(project_root / 'scripts' / 'quickstart.py')], cwd=project_root)
             
         elif args.command == 'test':
             print("🧪 Running test suite...")

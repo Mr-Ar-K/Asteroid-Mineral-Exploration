@@ -30,7 +30,7 @@ class SBDBClient:
         })
         
         self.api_calls_count = 0
-        self.last_call_time = time.time()  # Initialize last_call_time
+        self.last_reset_time = time.time()
         
     def _rate_limit(self):
         """Implement rate limiting for API calls."""
@@ -40,7 +40,7 @@ class SBDBClient:
         if self.api_calls_count >= max_calls_per_minute:
             if current_time - self.last_call_time < 60:
                 sleep_time = 60 - (current_time - self.last_call_time)
-                self.logger.info(f"Rate limit reached. Sleeping for {sleep_time:.2f} seconds")
+                logger.info(f"Rate limit reached. Sleeping for {sleep_time:.2f} seconds")
                 time.sleep(sleep_time)
                 self.api_calls_count = 0
         
@@ -48,7 +48,6 @@ class SBDBClient:
             self.api_calls_count = 0
             
         self.api_calls_count += 1
-        self.last_call_time = current_time  # Update last call time
         self.last_call_time = current_time
     
     def get_asteroid_data(self, designation: str) -> Optional[Dict[str, Any]]:

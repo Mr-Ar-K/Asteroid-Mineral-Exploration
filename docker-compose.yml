@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  asteroid-dashboard:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./logs:/app/logs
+    environment:
+      - PYTHONPATH=/app/src
+    restart: unless-stopped
+    
+  # Optional: Add a database service for persistent storage
+  # postgres:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: asteroid_mining
+  #     POSTGRES_USER: user
+  #     POSTGRES_PASSWORD: password
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+
+# volumes:
+#   postgres_data:
