@@ -1,14 +1,23 @@
-# Data Sources
+# =============================================================================
+# AI-Driven Asteroid Mining Classification - Configuration Template
+# =============================================================================
+# Copy this file to config.yaml and customize as needed
+# Most settings can be overridden via environment variables
+
+# API Endpoints
 NASA_SBDB_API: "https://ssd-api.jpl.nasa.gov/sbdb.api"
-NASA_API_KEY: ""  # Set via environment variable NASA_API_KEY
 NEOWISE_DATA_URL: "https://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query"
 
-# Account Information
+# Environment Variables (set these in .env file)
+NASA_API_KEY: ""  # Get from: https://api.nasa.gov/
 NASA_ACCOUNT:
-  email: ""  # Set via environment variable NASA_EMAIL
-  account_id: ""  # Set via environment variable NASA_ACCOUNT_ID
+  email: ""       # Your NASA account email
+  account_id: ""  # Your NASA account ID
 
-# Model Configuration
+# =============================================================================
+# Machine Learning Configuration
+# =============================================================================
+
 MODEL_CONFIG:
   random_forest:
     n_estimators: 200
@@ -28,7 +37,23 @@ MODEL_CONFIG:
     voting: "soft"
     weights: [0.6, 0.4]
 
+TRAINING:
+  test_size: 0.2
+  validation_size: 0.2
+  random_state: 42
+  stratify: true
+  cross_validation_folds: 5
+
+# Mining Potential Classification Thresholds
+MINING_POTENTIAL_THRESHOLDS:
+  high: 0.8
+  medium: 0.6
+  low: 0.4
+
+# =============================================================================
 # Feature Engineering
+# =============================================================================
+
 FEATURES:
   orbital_params: 
     - "semi_major_axis"
@@ -48,21 +73,39 @@ FEATURES:
     - "taxonomic_class"
     - "slope_parameter"
 
+# =============================================================================
 # Data Processing
+# =============================================================================
+
 DATA_PROCESSING:
+  batch_size: 1000
+  cache_duration: 86400  # 24 hours in seconds
   max_api_calls_per_minute: 100
   cache_expiry_days: 7
-  batch_size: 50
-  
-# Training Configuration
-TRAINING:
-  test_size: 0.2
-  validation_size: 0.2
-  random_state: 42
-  stratify: true
-  cross_validation_folds: 5
 
-# Logging
+# =============================================================================
+# Dashboard Configuration
+# =============================================================================
+
+DASHBOARD:
+  title: "AI-Driven Asteroid Mining Dashboard"
+  port: 8501
+  theme: "dark"
+  cache_ttl: 3600  # 1 hour
+
+# =============================================================================
+# Delta-V Calculation Parameters
+# =============================================================================
+
+DELTA_V_CONFIG:
+  earth_departure: 3.2    # km/s baseline
+  asteroid_rendezvous: 1.5 # km/s baseline
+  return_trajectory: 2.8   # km/s baseline
+
+# =============================================================================
+# Logging Configuration
+# =============================================================================
+
 LOGGING:
   level: "INFO"
   format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

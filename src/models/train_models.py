@@ -345,10 +345,10 @@ def main():
     )
     
     if success:
-        print("Training completed successfully!")
-        print(f"Models saved to: {args.output_dir}")
+        logger.info("Training completed successfully!")
+        logger.info(f"Models saved to: {args.output_dir}")
     else:
-        print("Training failed!")
+        logger.error("Training failed!")
         exit(1)
 
 if __name__ == "__main__":

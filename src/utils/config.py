@@ -76,7 +76,8 @@ class Config:
         except FileNotFoundError:
             return {}
         except yaml.YAMLError as e:
-            print(f"Warning: Error parsing configuration file: {e}")
+            import logging
+            logging.warning(f"Error parsing configuration file: {e}")
             return {}
     
     def _load_env_variables(self):

@@ -628,7 +628,7 @@ def show_mining_assessment(predictor):
             "Maximum asteroids to analyze:", 
             min_value=1, 
             max_value=100, 
-            value=min(20, len(asteroids_to_analyze))
+            value=max(1, min(20, len(asteroids_to_analyze))) if asteroids_to_analyze else 1
         )
     
     with col2:
@@ -736,8 +736,8 @@ def display_batch_results(results, sort_by, filter_threshold):
         show_top_n = st.number_input(
             "Show top N results:", 
             min_value=5, 
-            max_value=len(df_filtered), 
-            value=min(10, len(df_filtered))
+            max_value=max(5, len(df_filtered)), 
+            value=max(5, min(10, len(df_filtered))) if len(df_filtered) > 0 else 5
         )
     
     with col2:

@@ -447,11 +447,36 @@ class FeatureExtractor:
         
         # Handle missing values
         if available_features:
-            df[available_features] = self.imputer.fit_transform(df[available_features])
+            # Check for features with all NaN values and remove them
+            valid_features = []
+            for feature in available_features:
+                if not df[feature].isna().all():
+                    valid_features.append(feature)
             
-            # Remove infinite values
-            df[available_features] = df[available_features].replace([np.inf, -np.inf], np.nan)
-            df[available_features] = self.imputer.fit_transform(df[available_features])
+            if valid_features:
+                # Fit and transform the valid features
+                feature_data = df[valid_features].copy()
+                imputed_values = self.imputer.fit_transform(feature_data)
+                
+                # Update the original DataFrame with imputed values
+                for i, col in enumerate(valid_features):
+                    df[col] = imputed_values[:, i]
+                
+                # Remove infinite values and handle them
+                for col in valid_features:
+                    # Replace infinite values with NaN
+                    df[col] = df[col].replace([np.inf, -np.inf], np.nan)
+                
+                # Apply imputation again if we introduced new NaNs
+                if df[valid_features].isna().any().any():
+                    feature_data = df[valid_features].copy()
+                    imputed_values = self.imputer.fit_transform(feature_data)
+                    for i, col in enumerate(valid_features):
+                        df[col] = imputed_values[:, i]
+                
+                available_features = valid_features
+            else:
+                available_features = []
         
         logger.info(f"Prepared {len(available_features)} features for ML")
         return df, available_features

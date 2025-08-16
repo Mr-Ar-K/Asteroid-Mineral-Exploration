@@ -84,13 +84,22 @@ class AsteroidPredictor:
             # Prepare features for ML
             ml_data, feature_names = self.feature_extractor.prepare_features_for_ml(processed_data)
             
-            if ml_data.empty:
+            if ml_data.empty or not feature_names:
                 logger.error(f"Feature extraction failed for {designation}")
                 return None
             
+            # Select only available features
+            available_features = [f for f in feature_names if f in ml_data.columns]
+            
+            if not available_features:
+                logger.error(f"No valid features available for {designation}")
+                return None
+            
+            logger.info(f"Using {len(available_features)} features for prediction")
+            
             # Make predictions
             predictions = self.classifier.predict_mining_potential(
-                ml_data[feature_names], model_type='ensemble'
+                ml_data[available_features], model_type='ensemble'
             )
             
             # Compile results
@@ -185,13 +194,22 @@ class AsteroidPredictor:
             # Prepare features for ML
             ml_data, feature_names = self.feature_extractor.prepare_features_for_ml(processed_data)
             
-            if ml_data.empty:
+            if ml_data.empty or not feature_names:
                 logger.error("Feature extraction failed")
                 return data
             
+            # Select only available features
+            available_features = [f for f in feature_names if f in ml_data.columns]
+            
+            if not available_features:
+                logger.error("No valid features available")
+                return data
+            
+            logger.info(f"Using {len(available_features)} features for batch prediction")
+            
             # Make predictions
             predictions = self.classifier.predict_mining_potential(
-                ml_data[feature_names], model_type='ensemble'
+                ml_data[available_features], model_type='ensemble'
             )
             
             # Add predictions to dataframe
