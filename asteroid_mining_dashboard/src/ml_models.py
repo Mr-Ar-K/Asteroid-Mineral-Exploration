@@ -9,6 +9,7 @@ Implements Random Forest and Gradient Boosting ensemble models.
 
 import pandas as pd
 import numpy as np
+import xgboost as xgb
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.preprocessing import StandardScaler, LabelEncoder

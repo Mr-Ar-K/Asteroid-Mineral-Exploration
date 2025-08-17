@@ -84,7 +84,8 @@ class MultiAgencyDataCollector:
             'full-prec': True,
             'phys-par': True,
             'close-appr': True,
-            'orbit': True
+            'orbit': True,
+            'extra-fields': 'n_obs'
         }
         
         try:
@@ -480,8 +481,14 @@ class AsteroidDataProcessor:
                 if sstr_value:
                     sbdb_data = self.collector.fetch_sbdb_asteroid_data(sstr_value)
                     if sbdb_data:
+                        # Extract additional fields: number of observations and PHA flag
+                        num_obs = int(sbdb_data.get('extra_fields', {}).get('n_obs', 0))
+                        pha_flag = sbdb_data.get('object', {}).get('pha', False) in ('Y', True)
                         # Extract features
                         physical_features = self.feature_extractor.extract_physical_features(sbdb_data)
+                        # Add new fields
+                        physical_features['n_obs'] = num_obs
+                        physical_features['is_pha'] = pha_flag
                         orbital_features = self.feature_extractor.extract_orbital_features(sbdb_data)
                         mining_features = self.feature_extractor.calculate_mining_score_features(
                             physical_features, orbital_features
@@ -508,11 +515,28 @@ class AsteroidDataProcessor:
         # Convert to DataFrame
         df = pd.DataFrame(all_asteroids)
         if not df.empty:
+            # Ensure numeric columns are properly typed
             for num_col in ['diameter_km', 'albedo', 'semi_major_axis', 'eccentricity', 'inclination',
                             'periapsis_distance', 'apoapsis_distance', 'earth_moid', 'delta_v_estimate',
                             'accessibility_score', 'combined_mining_score']:
                 if num_col in df.columns:
                     df[num_col] = pd.to_numeric(df[num_col], errors='coerce')
+            # Feature engineering: Resource Confidence Score
+            # Prepare observation counts
+            if 'n_obs' in df.columns:
+                df['n_obs'] = df['n_obs'].fillna(0)
+            else:
+                df['n_obs'] = 0
+            df['n_obs_log'] = np.log1p(df['n_obs'])
+            max_log = df['n_obs_log'].max() if df['n_obs_log'].any() else 1
+            df['resource_confidence_score'] = df['n_obs_log'] / max_log
+            df['resource_confidence_score'].fillna(0.1, inplace=True)
+            # Feature engineering: Mission Accessibility Score
+            df['accessibility_score'] = 1 / (df.get('earth_moid', 0) + 0.01)
+            if 'is_pha' in df.columns:
+                df.loc[df['is_pha'] == True, 'accessibility_score'] *= 1.5
+            max_acc = df['accessibility_score'].max() if df['accessibility_score'].any() else 1
+            df['mission_accessibility_score'] = df['accessibility_score'] / max_acc
         
         # Save to file
         output_file = self.output_dir / f"neo_dataset_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"

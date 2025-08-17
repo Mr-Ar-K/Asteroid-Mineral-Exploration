@@ -1,47 +1,56 @@
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-*.pyc
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.eggs/
+*.whl
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+env/
+
+# Pytest
+.pytest_cache/
+
+# Mypy
+.mypy_cache/
+
+# Coverage reports
+.coverage
+htmlcov/
+coverage.xml
 
 # Jupyter Notebooks
 *.ipynb
 .ipynb_checkpoints/
 
-# VS Code
+# IDEs and editors
 .vscode/
-
-# Data and models
-/data/
-/models/
-*.h5
-*.pkl
-*.csv
-*.tsv
-*.json
-*.xlsx
-*.db
-
-# Environment
-.env
-.venv/
-venv/
+*.sublime-project
+*.sublime-workspace
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# Logs
+# Logs and databases
 *.log
+*.sqlite3
 
-# Test and coverage
-.coverage
-htmlcov/
-*.cover
-*.py,cover
+# Data and models (large files)
+data/
+models/
 
-# Build
-build/
-dist/
-*.egg-info/
+# dotenv files
+.env
+*.env
